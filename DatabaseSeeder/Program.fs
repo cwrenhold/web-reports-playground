@@ -17,6 +17,7 @@ let connectionString =
     |> Sql.username envVars.["POSTGRES_USER"]
     |> Sql.password envVars.["POSTGRES_PASSWORD"]
     |> Sql.port (int envVars.["POSTGRES_PORT"])
+    |> Sql.includeErrorDetail true
     |> Sql.formatConnectionString
 
 // Select top 1 from database to check connection works
@@ -38,6 +39,7 @@ else
 createSubjectsTable connectionString |> ignore
 createFiltersTable connectionString |> ignore
 createFilterValuesTable connectionString |> ignore
+createGradesTable connectionString |> ignore
 createStudentsTable connectionString |> ignore
 createStudentSubjectsTable connectionString |> ignore
 createStudentGradesTable connectionString |> ignore
@@ -49,6 +51,7 @@ printfn "Tables created"
 let subjects = populateSubjectsTable connectionString
 let filters = populateFiltersTable connectionString
 let filterValues = populateFilterValuesTable connectionString filters
+let grades = populateGradesTable connectionString
 
 printfn "Static tables populated"
 

@@ -11,7 +11,7 @@ let populateSubjectsTable(connectionString): Subject list =
         |> Sql.query "SELECT COUNT(*) AS count FROM subjects"
         |> Sql.execute (fun x -> x.int "count")
         |> Seq.head
-        |> (>) 0
+        |> (<) 0
 
     if alreadyPopulated then
         printfn "Subjects table already populated"
@@ -40,7 +40,7 @@ let populateFiltersTable(connectionString): Filter list =
         |> Sql.query "SELECT COUNT(*) AS count FROM filters"
         |> Sql.execute (fun x -> x.int "count")
         |> Seq.head
-        |> (>) 0
+        |> (<) 0
 
     if alreadyPopulated then
         printfn "Filters table already populated"
@@ -69,7 +69,7 @@ let populateFilterValuesTable(connectionString) (filters: Filter list): FilterVa
         |> Sql.query "SELECT COUNT(*) AS count FROM filter_values"
         |> Sql.execute (fun x -> x.int "count")
         |> Seq.head
-        |> (>) 0
+        |> (<) 0
 
     if alreadyPopulated then
         printfn "Filter values table already populated"
@@ -95,4 +95,39 @@ let populateFilterValuesTable(connectionString) (filters: Filter list): FilterVa
     |> Sql.connect
     |> Sql.query "SELECT * FROM filter_values"
     |> Sql.execute (fun x -> { Id = x.int "id"; FilterId = x.int "filter_id"; Text = x.string "text" }: FilterValue)
+    |> Seq.toList
+
+let populateGradesTable(connectionString): Grade list =
+    let alreadyPopulated = 
+        connectionString
+        |> Sql.connect
+        |> Sql.query "SELECT COUNT(*) AS count FROM grades"
+        |> Sql.execute (fun x -> x.int "count")
+        |> Seq.head
+        |> (<) 0
+
+    if alreadyPopulated then
+        printfn "Grades table already populated"
+    else
+        Names.gradeNames
+        |> Seq.iteri (fun index grade ->
+            let points = if index = 0 then None else Some (decimal index - 1m)
+            let text = grade
+
+            connectionString
+            |> Sql.connect
+            |> Sql.query "INSERT INTO grades (points, text) VALUES (@points, @text)"
+            |> Sql.parameters [
+                "@points", Sql.decimalOrNone points;
+                "@text", Sql.string text
+            ]
+            |> Sql.executeNonQuery
+            |> ignore
+        )
+
+    // Return the list of grades
+    connectionString
+    |> Sql.connect
+    |> Sql.query "SELECT * FROM grades"
+    |> Sql.execute (fun x -> { Id = x.int "id"; Points = x.floatOrNone "points"; Text = x.string "text" }: Grade)
     |> Seq.toList

@@ -37,6 +37,18 @@ let createFilterValuesTable(connectionString) =
         )"
     |> Sql.executeNonQuery
 
+let createGradesTable(connectionString) =
+    connectionString
+    |> Sql.connect
+    |> Sql.query 
+        "CREATE TABLE IF NOT EXISTS grades
+        (
+            id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            points NUMERIC(10, 5) NULL,
+            text VARCHAR(255) NOT NULL
+        )"
+    |> Sql.executeNonQuery
+
 let createStudentsTable(connectionString) =
     connectionString
     |> Sql.connect
@@ -72,9 +84,10 @@ let createStudentGradesTable(connectionString) =
             id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             student_id INTEGER NOT NULL,
             subject_id INTEGER NOT NULL,
-            points NUMERIC(5, 5),
+            grade_id INTEGER NOT NULL,
             FOREIGN KEY (student_id) REFERENCES students(id),
-            FOREIGN KEY (subject_id) REFERENCES subjects(id)
+            FOREIGN KEY (subject_id) REFERENCES subjects(id),
+            FOREIGN KEY (grade_id) REFERENCES grades(id)
         )"
     |> Sql.executeNonQuery
 

@@ -23,11 +23,17 @@ type Subject = {
     Name: string
 }
 
+type Grade = {
+    Id: int
+    Points: float32 option
+    Text: string
+}
+
 type StudentGrade = {
     Id: int
     StudentId: int
     SubjectId: int
-    Points: int
+    GradeId: int
 }
 
 type Student = {

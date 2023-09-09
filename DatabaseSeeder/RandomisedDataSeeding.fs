@@ -17,7 +17,7 @@ let populateStudents(connectionString) =
         |> Sql.query "SELECT COUNT(*) AS count FROM students"
         |> Sql.execute (fun x -> x.int "count")
         |> Seq.head
-        |> (>) 0
+        |> (<) 0
 
     if alreadyPopulated then
         printfn "Students table already populated"

@@ -49,6 +49,17 @@ let filterValues : rawFilterValue list = [
     { filterName = "SEND"; filterValue = "D"}
 ]
 
+let gradeNames = [
+    "U"
+    "F"
+    "E"
+    "D"
+    "C"
+    "B"
+    "A"
+    "A*"
+]
+
 let firstNames = [
     "Sibylla"
     "Ilaire"
