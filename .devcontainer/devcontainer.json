@@ -14,7 +14,8 @@
 			"extensions": [
 				"GitHub.copilot",
 				"ckolkman.vscode-postgres",
-				"rangav.vscode-thunder-client"
+				"rangav.vscode-thunder-client",
+				"Ionide.Ionide-fsharp"
 			]
 		}
 	},
