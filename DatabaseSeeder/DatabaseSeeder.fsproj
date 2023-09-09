@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="DataTypes.fs" />
+    <Compile Include="Names.fs" />
+    <Compile Include="TableCreation.fs" />
+    <Compile Include="StaticDataSeeding.fs" />
+    <Compile Include="RandomisedDataSeeding.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

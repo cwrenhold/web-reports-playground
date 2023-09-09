@@ -1,6 +1,10 @@
 ﻿open FSharp.Data.Sql
 open Npgsql.FSharp
 
+open DatabaseSeeder.TableCreation
+open DatabaseSeeder.StaticDataSeeding
+open DatabaseSeeder.RandomisedDataSeeding
+
 let envVars = 
     System.Environment.GetEnvironmentVariables()
     |> Seq.cast<System.Collections.DictionaryEntry>
@@ -29,3 +33,26 @@ if checkConnection = 1 then
 else
     printfn "Connection to database failed"
     exit 1
+
+// Run the table creation queries
+createSubjectsTable connectionString |> ignore
+createFiltersTable connectionString |> ignore
+createFilterValuesTable connectionString |> ignore
+createStudentsTable connectionString |> ignore
+createStudentSubjectsTable connectionString |> ignore
+createStudentGradesTable connectionString |> ignore
+createStudentFiltersTable connectionString |> ignore
+
+printfn "Tables created"
+
+// Run the population scripts
+let subjects = populateSubjectsTable connectionString
+let filters = populateFiltersTable connectionString
+let filterValues = populateFilterValuesTable connectionString filters
+
+printfn "Static tables populated"
+
+// Run the randomised population scripts
+let students = populateStudents connectionString
+
+printfn "Randomised tables populated"
