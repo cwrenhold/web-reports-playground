@@ -3,15 +3,17 @@ module DatabaseSeeder.StaticDataSeeding
 open Npgsql.FSharp
 open DataTypes
 
-// Populate the subjects table using the subject names from Names
+let isTablePopulated connectionString tableName =
+    connectionString
+    |> Sql.connect
+    |> Sql.query ("SELECT COUNT(*) AS count FROM " + tableName)
+    |> Sql.execute (fun x -> x.int "count")
+    |> Seq.head
+    |> (<) 0
+
 let populateSubjectsTable(connectionString): Subject list =
     let alreadyPopulated = 
-        connectionString
-        |> Sql.connect
-        |> Sql.query "SELECT COUNT(*) AS count FROM subjects"
-        |> Sql.execute (fun x -> x.int "count")
-        |> Seq.head
-        |> (<) 0
+        isTablePopulated connectionString "subjects"
 
     if alreadyPopulated then
         printfn "Subjects table already populated"
@@ -35,12 +37,7 @@ let populateSubjectsTable(connectionString): Subject list =
 
 let populateFiltersTable(connectionString): Filter list =
     let alreadyPopulated = 
-        connectionString
-        |> Sql.connect
-        |> Sql.query "SELECT COUNT(*) AS count FROM filters"
-        |> Sql.execute (fun x -> x.int "count")
-        |> Seq.head
-        |> (<) 0
+        isTablePopulated connectionString "filters"
 
     if alreadyPopulated then
         printfn "Filters table already populated"
@@ -64,12 +61,7 @@ let populateFiltersTable(connectionString): Filter list =
 
 let populateFilterValuesTable(connectionString) (filters: Filter list): FilterValue list =
     let alreadyPopulated = 
-        connectionString
-        |> Sql.connect
-        |> Sql.query "SELECT COUNT(*) AS count FROM filter_values"
-        |> Sql.execute (fun x -> x.int "count")
-        |> Seq.head
-        |> (<) 0
+        isTablePopulated connectionString "filter_values"
 
     if alreadyPopulated then
         printfn "Filter values table already populated"
@@ -99,12 +91,7 @@ let populateFilterValuesTable(connectionString) (filters: Filter list): FilterVa
 
 let populateGradesTable(connectionString): Grade list =
     let alreadyPopulated = 
-        connectionString
-        |> Sql.connect
-        |> Sql.query "SELECT COUNT(*) AS count FROM grades"
-        |> Sql.execute (fun x -> x.int "count")
-        |> Seq.head
-        |> (<) 0
+        isTablePopulated connectionString "grades"
 
     if alreadyPopulated then
         printfn "Grades table already populated"

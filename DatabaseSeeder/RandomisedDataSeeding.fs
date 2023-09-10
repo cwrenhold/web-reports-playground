@@ -5,6 +5,7 @@ open Npgsql.FSharp
 
 open DatabaseSeeder.Names
 open DatabaseSeeder.DataTypes
+open DatabaseSeeder.StaticDataSeeding
 
 let randomSeed = 1
 let randomiser = System.Random(randomSeed)
@@ -12,12 +13,7 @@ let totalStudentCount = 1000
 
 let populateStudents(connectionString) =
     let alreadyPopulated = 
-        connectionString
-        |> Sql.connect
-        |> Sql.query "SELECT COUNT(*) AS count FROM students"
-        |> Sql.execute (fun x -> x.int "count")
-        |> Seq.head
-        |> (<) 0
+        isTablePopulated connectionString "students"
 
     if alreadyPopulated then
         printfn "Students table already populated"
