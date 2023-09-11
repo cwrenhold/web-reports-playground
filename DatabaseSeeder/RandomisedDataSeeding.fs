@@ -14,12 +14,11 @@ let populateStudents(connectionString) =
     if alreadyPopulated then
         printfn "Students table already populated"
     else
-        let randomSeed = 1
-        let randomiser = System.Random(randomSeed)
         let totalStudentCount = 1000
 
         [0..totalStudentCount]
         |> Seq.iter (fun i ->
+            let randomiser = System.Random(i)
             let firstName = firstNames.[randomiser.Next(0, firstNames.Length)]
             let lastName = lastNames.[randomiser.Next(0, lastNames.Length)]
 
