@@ -2,14 +2,7 @@ module DatabaseSeeder.StaticDataSeeding
 
 open Npgsql.FSharp
 open DataTypes
-
-let isTablePopulated connectionString tableName =
-    connectionString
-    |> Sql.connect
-    |> Sql.query ("SELECT COUNT(*) AS count FROM " + tableName)
-    |> Sql.execute (fun x -> x.int "count")
-    |> Seq.head
-    |> (<) 0
+open DatabaseUtils
 
 let populateSubjectsTable(connectionString): Subject list =
     let alreadyPopulated = 
@@ -28,12 +21,7 @@ let populateSubjectsTable(connectionString): Subject list =
             |> ignore
         )
 
-    // Return the list of subjects
-    connectionString
-    |> Sql.connect
-    |> Sql.query "SELECT * FROM subjects"
-    |> Sql.execute (fun x -> { Id = x.int "id"; Name = x.string "name" }: Subject)
-    |> Seq.toList
+    selectAllAndMap connectionString "subjects" (fun x -> { Id = x.int "id"; Name = x.string "name" }: Subject)
 
 let populateFiltersTable(connectionString): Filter list =
     let alreadyPopulated = 
@@ -52,12 +40,7 @@ let populateFiltersTable(connectionString): Filter list =
             |> ignore
         )
 
-    // Return the list of filters
-    connectionString
-    |> Sql.connect
-    |> Sql.query "SELECT * FROM filters"
-    |> Sql.execute (fun x -> { Id = x.int "id"; Name = x.string "name" }: Filter)
-    |> Seq.toList
+    selectAllAndMap connectionString "filters" (fun x -> { Id = x.int "id"; Name = x.string "name" }: Filter)
 
 let populateFilterValuesTable(connectionString) (filters: Filter list): FilterValue list =
     let alreadyPopulated = 
@@ -82,12 +65,7 @@ let populateFilterValuesTable(connectionString) (filters: Filter list): FilterVa
             |> ignore
         )
 
-    // Return the list of filter values
-    connectionString
-    |> Sql.connect
-    |> Sql.query "SELECT * FROM filter_values"
-    |> Sql.execute (fun x -> { Id = x.int "id"; FilterId = x.int "filter_id"; Text = x.string "text" }: FilterValue)
-    |> Seq.toList
+    selectAllAndMap connectionString "filter_values" (fun x -> { Id = x.int "id"; FilterId = x.int "filter_id"; Text = x.string "text" }: FilterValue)
 
 let populateGradesTable(connectionString): Grade list =
     let alreadyPopulated = 
@@ -112,9 +90,4 @@ let populateGradesTable(connectionString): Grade list =
             |> ignore
         )
 
-    // Return the list of grades
-    connectionString
-    |> Sql.connect
-    |> Sql.query "SELECT * FROM grades"
-    |> Sql.execute (fun x -> { Id = x.int "id"; Points = x.floatOrNone "points"; Text = x.string "text" }: Grade)
-    |> Seq.toList
+    selectAllAndMap connectionString "grades" (fun x -> { Id = x.int "id"; Points = x.floatOrNone "points"; Text = x.string "text" }: Grade)

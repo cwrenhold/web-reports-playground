@@ -58,5 +58,7 @@ printfn "Static tables populated"
 // Run the randomised population scripts
 let students = populateStudents connectionString
 let studentFilterValues = populateStudentFilter connectionString students filters filterValues
+let studetGrades = populateStudentGrades connectionString students subjects grades
+let studentSubjects = populateStudentSubjects connectionString students subjects
 
 printfn "Randomised tables populated"

@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="DataTypes.fs" />
     <Compile Include="Names.fs" />
+    <Compile Include="DatabaseUtils.fs" />
     <Compile Include="TableCreation.fs" />
     <Compile Include="StaticDataSeeding.fs" />
     <Compile Include="RandomisedDataSeeding.fs" />

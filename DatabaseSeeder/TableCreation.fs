@@ -1,12 +1,6 @@
 module DatabaseSeeder.TableCreation
 
-open Npgsql.FSharp
-
-let executeQuery connectionString query =
-    connectionString
-    |> Sql.connect
-    |> Sql.query query
-    |> Sql.executeNonQuery
+open DatabaseSeeder.DatabaseUtils
 
 let createSubjectsTable(connectionString) =
     executeQuery connectionString

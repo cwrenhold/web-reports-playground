@@ -36,6 +36,12 @@ type StudentGrade = {
     GradeId: int
 }
 
+type StudentSubject = {
+    Id: int
+    StudentId: int
+    SubjectId: int
+}
+
 type Student = {
     Id: int
     FirstName: string
