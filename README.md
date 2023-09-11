@@ -14,6 +14,8 @@ This approach will be to use ASP.NET Core to create a simple API that will retur
 
 Queries with this will *probably* be written with Entity Framework, but we'll see...
 
+**Note: If the database schema needs to be modified, the database can be re-scaffolded using the `scaffold-database.sh` script in the `BackendCSharp` project**
+
 ## Approach 2: JavaScript front end with API back end
 
 This approach will leverage a different backend API which will serve the raw, underlying data rather than the final models. This will mean that the JavaScript will be responsible for filtering the data and rendering the chart.

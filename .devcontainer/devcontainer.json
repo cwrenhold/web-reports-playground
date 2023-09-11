@@ -15,7 +15,8 @@
 				"GitHub.copilot",
 				"ckolkman.vscode-postgres",
 				"rangav.vscode-thunder-client",
-				"Ionide.Ionide-fsharp"
+				"Ionide.Ionide-fsharp",
+				"ms-dotnettools.csharp"
 			]
 		}
 	},
