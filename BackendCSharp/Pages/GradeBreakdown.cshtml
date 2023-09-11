@@ -1,0 +1,33 @@
+@page
+@model GradeBreakdownModel
+@using BackendCSharp.Data
+@{
+    ViewData["Title"] = "Grade Breakdown";
+}
+
+@if (this.Model.Filters.Any())
+{
+    <label for="subject">Subject:</label>
+    <select id="subject" class="form-control" asp-for="SelectedSubjectId">
+        <option value="">All</option>
+        @foreach (var subject in this.Model.Subjects)
+        {
+            <option value="@subject">@subject.Name</option>
+        }
+    </select>
+
+    <label for="filter">Breakdown:</label>
+    <select id="filter" class="form-control" asp-for="SelectedFilterId">
+        <option value="">None</option>
+        @foreach (var filter in this.Model.Filters)
+        {
+            <option value="@filter">@filter.Name</option>
+        }
+    </select>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <strong>Warning!</strong> No filters could be found.
+    </div>
+}

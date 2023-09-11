@@ -16,21 +16,21 @@ public partial class PlaygroundContext : DbContext
     {
     }
 
-    public virtual DbSet<Filter> Filters { get; set; }
+    public virtual DbSet<Filter> Filters { get; set; } = default!;
 
-    public virtual DbSet<FilterValue> FilterValues { get; set; }
+    public virtual DbSet<FilterValue> FilterValues { get; set; } = default!;
 
-    public virtual DbSet<Grade> Grades { get; set; }
+    public virtual DbSet<Grade> Grades { get; set; } = default!;
 
-    public virtual DbSet<Student> Students { get; set; }
+    public virtual DbSet<Student> Students { get; set; } = default!;
 
-    public virtual DbSet<StudentFilter> StudentFilters { get; set; }
+    public virtual DbSet<StudentFilter> StudentFilters { get; set; } = default!;
 
-    public virtual DbSet<StudentGrade> StudentGrades { get; set; }
+    public virtual DbSet<StudentGrade> StudentGrades { get; set; } = default!;
 
-    public virtual DbSet<StudentSubject> StudentSubjects { get; set; }
+    public virtual DbSet<StudentSubject> StudentSubjects { get; set; } = default!;
 
-    public virtual DbSet<Subject> Subjects { get; set; }
+    public virtual DbSet<Subject> Subjects { get; set; } = default!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
