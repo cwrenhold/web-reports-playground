@@ -13,3 +13,6 @@ done
 if ! psql -h $POSTGRES_SERVER -U $POSTGRES_USER -tAc "SELECT 1 FROM pg_database WHERE datname='$PROJECT_DB'" | grep -q 1; then
   psql -h $POSTGRES_SERVER -U $POSTGRES_USER -c "CREATE DATABASE $PROJECT_DB"
 fi
+
+# Create the dotnet dev certificates
+dotnet dev-certs https

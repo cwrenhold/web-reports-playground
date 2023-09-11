@@ -5,6 +5,27 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": ".NET Core Launch (BackendCSharp)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-backend-csharp",
+            "program": "${workspaceFolder}/BackendCSharp/bin/Debug/net7.0/BackendCSharp.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/BackendCSharp",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "envFile": "${workspaceFolder}/.devcontainer/.env",
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
             "name": ".NET Core Launch (DatabaseSeeder)",
             "type": "coreclr",
             "request": "launch",
@@ -13,7 +34,8 @@
             "args": [],
             "cwd": "${workspaceFolder}/DatabaseSeeder",
             "stopAtEntry": false,
-            "console": "internalConsole"
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/.devcontainer/.env"
         }
     ]
 }
