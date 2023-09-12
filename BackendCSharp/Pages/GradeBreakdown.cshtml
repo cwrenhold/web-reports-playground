@@ -31,3 +31,29 @@ else
         <strong>Warning!</strong> No filters could be found.
     </div>
 }
+
+<div style="max-height: 500px;">
+    <canvas id="myChart"></canvas>
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [@Html.Raw(Model.ReportData.Select(x => $"\"{x.Label}\"").Aggregate((x, y) => x + ", " + y))],
+            datasets: [{
+                label: '# of Grades',
+                data: [@Model.ReportData.Select(x => x.Count.ToString()).Aggregate((x, y) => x + ", " + y)],
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+
+}
