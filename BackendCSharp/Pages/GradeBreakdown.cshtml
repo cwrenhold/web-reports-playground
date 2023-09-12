@@ -5,35 +5,41 @@
     ViewData["Title"] = "Grade Breakdown";
 }
 
-@if (this.Model.Filters.Any())
-{
+<form method="get" id="optionsForm">
     <label for="subject">Subject:</label>
-    <select id="subject" class="form-control" asp-for="SelectedSubjectId">
+    <select id="subject" class="form-control" asp-for="SelectedSubjectId" onchange="document.getElementById('optionsForm').submit()">
         <option value="">All</option>
         @foreach (var subject in this.Model.Subjects)
         {
-            <option value="@subject">@subject.Name</option>
+            <option value="@subject.Id">@subject.Name</option>
         }
     </select>
 
     <label for="filter">Breakdown:</label>
-    <select id="filter" class="form-control" asp-for="SelectedFilterId">
+    <select id="filter" class="form-control" asp-for="SelectedFilterId" onchange="document.getElementById('optionsForm').submit()">
         <option value="">None</option>
         @foreach (var filter in this.Model.Filters)
         {
-            <option value="@filter">@filter.Name</option>
+            <option value="@filter.Id">@filter.Name</option>
         }
     </select>
-}
-else
-{
-    <div class="alert alert-warning" role="alert">
-        <strong>Warning!</strong> No filters could be found.
-    </div>
-}
+</form>
 
-<div style="max-height: 500px;">
-    <canvas id="myChart"></canvas>
+<div>
+    @foreach (var group in Model.GroupReportData)
+    {
+        <div style="height: 500px; float: left;">
+            @if (group.Key != null)
+            {
+                <h3>@group.Key</h3>
+            }
+
+            <div style="height: 450px">
+                <canvas id="chart-@group.Key"></canvas>
+            </div>
+        </div>
+    }
+    <div style="clear: both;"></div>
 </div>
 
 @section Scripts
@@ -41,19 +47,24 @@ else
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-    const ctx = document.getElementById('myChart');
+        @foreach (var group in Model.GroupReportData)
+        {
+            <text>
+            var ctx = document.getElementById('chart-@group.Key');
 
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: [@Html.Raw(Model.ReportData.Select(x => $"\"{x.Label}\"").Aggregate((x, y) => x + ", " + y))],
-            datasets: [{
-                label: '# of Grades',
-                data: [@Model.ReportData.Select(x => x.Count.ToString()).Aggregate((x, y) => x + ", " + y)],
-                borderWidth: 1
-            }]
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [@Html.Raw(group.Select(x => $"\"{x.Label}\"").Aggregate((x, y) => x + ", " + y))],
+                    datasets: [{
+                        label: '# of Grades',
+                        data: [@group.Select(x => x.Count.ToString()).Aggregate((x, y) => x + ", " + y)],
+                        borderWidth: 1
+                    }]
+                },
+            });
+            </text>
         }
-    });
 </script>
 
 }
