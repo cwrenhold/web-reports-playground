@@ -4,6 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages()
     .AddRazorRuntimeCompilation();
 
+builder.Services.AddControllers();
+
 builder.Services.AddDbContext<BackendCSharp.Data.PlaygroundContext>();
 
 var app = builder.Build();
@@ -28,5 +30,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapControllers();
 
 app.Run();
