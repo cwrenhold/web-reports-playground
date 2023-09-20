@@ -21,3 +21,6 @@ USER vscode
 
 # Install dotnet ef tooling
 RUN dotnet tool install --global dotnet-ef
+
+# Install required npm global packages
+RUN npm install -g create-vite
