@@ -3,7 +3,7 @@ import { ApiResponse } from './DataTypes';
 import './style.css';
 
 async function fetchData(): Promise<ApiResponse> {
-  const response = await fetch('https://localhost:8002/api/rawdata');
+  const response = await fetch('https://localhost:8003/api/rawdata');
   const data = await response.json();
   return data;
 }

@@ -42,6 +42,29 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-frontend-go",
+            "options": {
+                "cwd": "${workspaceFolder}/FrontendGo",
+                "env": {
+                    "GOOS": "js",
+                    "GOARCH": "wasm"
+                }
+            },
+            "command": "go",
+            "type": "shell",
+            "args": [
+                "build",
+                "-o",
+                "public/dist/main.wasm",
+                "src/main.go"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$go"
         }
     ]
 }

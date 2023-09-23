@@ -8,3 +8,6 @@
 
 # Setup typescript
 ./.devcontainer/initialise_typescript.sh
+
+# Setup go
+./.devcontainer/initialise_go.sh
