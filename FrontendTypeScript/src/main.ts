@@ -53,7 +53,6 @@ function generateCharts(dataSet: ApiResponse) {
   chartsContainer.innerHTML = '';
   chartsCollection.length = 0;
 
-  let students = dataSet.students;
   let studentGrades = dataSet.studentGrades;
 
   if (selectedSubject !== null) {
