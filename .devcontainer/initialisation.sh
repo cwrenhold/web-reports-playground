@@ -11,3 +11,6 @@
 
 # Setup go
 ./.devcontainer/initialise_go.sh
+
+# Setup ruby
+./.devcontainer/initialise_ruby.sh
