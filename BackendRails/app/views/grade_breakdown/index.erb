@@ -1,0 +1,63 @@
+<form method="get" id="optionsForm">
+    <label for="subject">Subject:</label>
+    <select id="subject" name="selected_subject_id" onchange="document.getElementById('optionsForm').submit()">
+        <option value="">All</option>
+        <% @subjects.each do |subject| %>
+            <option
+                value="<%= subject.id %>"
+                <%= "selected=\"selected\"" if subject.id == @selected_subject_id %>
+                >
+                <%= subject.name %>
+            </option>
+        <% end %>
+    </select>
+
+    <label for="filter">Filter:</label>
+    <select id="filter" name="selected_filter_id" onchange="document.getElementById('optionsForm').submit()">
+        <option value="">None</option>
+        <% @filters.each do |filter| %>
+            <option value="<%= filter.id %>" <%= "selected" if filter.id == @selected_filter_id %>><%= filter.name %></option>
+        <% end %>
+    </select>
+</form>
+
+<div>
+    <% @grouped_report_data.each do |group| %>
+        <div style="height: 500px; float: left;">
+            <% if group.first %>
+                <h2><%= group.first %></h2>
+            <% end %>
+            <div style="height: 450px">
+                <canvas id="chart-<%= group.first %>"></canvas>
+            </div>
+        </div>
+    <% end %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    <% @grouped_report_data.each do |group| %>
+        var ctx = document.getElementById('chart-<%= group.first %>');
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    <% group.last.each do |data| %>
+                        '<%= data[:label] %>',
+                    <% end %>
+                ],
+                datasets: [{
+                    label: '# of Grades',
+                    data: [
+                        <% group.last.each do |data| %>
+                            <%= data[:count] %>,
+                        <% end %>
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        });
+    <% end %>
+</script>
