@@ -1,2 +1,7 @@
+# Go version
 public/dist/wasm_exec.js
 public/dist/main.wasm
+
+# Tiny Go version
+public/dist/tiny_wasm_exec.js
+public/dist/tiny_main.wasm

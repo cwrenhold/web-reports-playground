@@ -65,6 +65,27 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$go"
+        },
+        {
+            "label": "build-frontend-tinygo",
+            "type": "shell",
+            "command": "tinygo",
+            "args": [
+                "build",
+                "-o",
+                "public/dist/tiny_main.wasm",
+                "-target",
+                "wasm",
+                "src/main.go"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/FrontendGo"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$go"
         }
     ]
 }
