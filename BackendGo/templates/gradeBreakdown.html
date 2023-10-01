@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Breakdown</title>
+</head>
+<body>
+    <form method="get" id="optionsForm">
+        <label for="subject">Subject:</label>
+        <select id="subject" name="subject" onchange="document.getElementById('optionsForm').submit()">
+            <option value="0">All</option>
+            {{ $selected := .SelectedSubjectId }}
+            {{ range $subject := .Subjects }}
+                <option value="{{ $subject.Id }}" {{ if eq $subject.Id $selected }}selected{{ end }}>
+                    {{ $subject.Name }}
+                </option>
+            {{ end }}
+        </select>
+
+        <label for="filter">Breakdown:</label>
+        <select id="filter" name="filter" onchange="document.getElementById('optionsForm').submit()">
+            <option value="0">None</option>
+            {{ $selected = .SelectedFilterId }}}
+            {{ range $filter := .Filters }}
+                <option value="{{ $filter.Id }}" {{ if eq $filter.Id $selected }}selected{{ end }}>
+                    {{ $filter.Name }}
+                </option>
+            {{ end }}
+        </select>
+    </form>
+
+    <div>
+        {{ range $group := .ReportData}}
+            <div style="height: 500px; float: left;">
+                {{ if $group.Key}}
+                    <h3>{{ $group.Key }}</h3>
+                {{ end }}
+            
+                <div style="height: 450px;">
+                    <canvas id="chart-{{ $group.Key }}"></canvas>
+                </div>
+            </div>
+        {{ end }}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const data = {{ .ReportData }};
+
+        data.forEach(group => {
+            const labels = group.items.map(d => d.Label);
+            const values = group.items.map(d => d.Count);
+
+            const ctx = document.getElementById(`chart-${group.key}`);
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '# of Grades',
+                        data: values,
+                        borderWidth: 1
+                    }]
+                },
+            });
+        });
+    </script>
+</body>
+</html>
