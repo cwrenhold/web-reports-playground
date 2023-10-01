@@ -6,19 +6,22 @@
     <title>Go with JavaScript</title>
   </head>
   <body>
-    <div id="optionsForm">
-      <label for="subject">Subject:</label>
-      <select id="subject">
-      </select>
+    <div id="report" style="display: none;">
+      <div id="optionsForm">
+        <label for="subject">Subject:</label>
+        <select id="subject">
+        </select>
 
-      <label for="filter">Breakdown:</label>
-      <select id="filter">
-      </select>
+        <label for="filter">Breakdown:</label>
+        <select id="filter">
+        </select>
+      </div>
+      <br />
+      <div id="charts"></div>
     </div>
-    <br />
-    <div id="charts"></div>
+    <div id="loading">Loading report...</div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="dist/wasm_exec.js"></script>
+    <script src="dist/tiny_wasm_exec.js"></script>
     <script src="dist/app.js"></script>
   </body>
 </html>

@@ -1,13 +1,48 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"sort"
 	"syscall/js"
+	"time"
 
 	"github.com/cwrenhold/web-reports-playground/src/datatypes"
 	"github.com/cwrenhold/web-reports-playground/src/utils"
+	fetch "marwan.io/wasm-fetch"
 )
+
+var loadedData datatypes.ApiResponse
+
+func loadDataFromUrl(url string) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	response, err := fetch.Fetch(url, &fetch.Opts{
+		Signal: ctx,
+		Method: fetch.MethodGet,
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	if response.Status != 200 {
+		return false, nil
+	}
+
+	jsData := response.Body
+
+	var apiResponse datatypes.ApiResponse
+	err = json.Unmarshal([]byte(jsData), &apiResponse)
+	if err != nil {
+		return false, err
+	}
+
+	loadedData = apiResponse
+
+	return true, nil
+}
 
 func jsValueToNullableInt(value js.Value) *int {
 	if value.IsNull() {
@@ -161,24 +196,36 @@ type FilterBreakdownIds struct {
 }
 
 func main() {
-	js.Global().Set("processData", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		jsData := args[0].String()
-		selectedSubjectId := jsValueToNullableInt(args[1])
-		selectedFilterId := jsValueToNullableInt(args[2])
+	js.Global().Set("loadDataFromUrl", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		url := args[0].String()
 
-		var apiResponse datatypes.ApiResponse
-		err := json.Unmarshal([]byte(jsData), &apiResponse)
-		if err != nil {
-			return js.Global().Get("Error").New(err.Error())
-		}
+		handler := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+			resolve := args[0]
+
+			go func() {
+				success, _ := loadDataFromUrl(url)
+
+				resolve.Invoke(success)
+			}()
+
+			return nil
+		})
+
+		promiseConstructor := js.Global().Get("Promise")
+		return promiseConstructor.New(handler)
+	}))
+
+	js.Global().Set("processData", js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		selectedSubjectId := jsValueToNullableInt(args[0])
+		selectedFilterId := jsValueToNullableInt(args[1])
 
 		result := datatypes.Report{
 			ReportDataItems: []utils.Grouping[string, datatypes.ReportDataItem]{},
-			Subjects:        apiResponse.Subjects,
-			Filters:         apiResponse.Filters,
+			Subjects:        loadedData.Subjects,
+			Filters:         loadedData.Filters,
 		}
 
-		result.ReportDataItems = generateReportDataItems(apiResponse, selectedSubjectId, selectedFilterId)
+		result.ReportDataItems = generateReportDataItems(loadedData, selectedSubjectId, selectedFilterId)
 
 		result.Subjects = append([]datatypes.Subject{datatypes.Subject{Id: nil, Name: "All"}}, result.Subjects...)
 		result.SelectedSubjectId = selectedSubjectId

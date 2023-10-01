@@ -61,9 +61,6 @@
                 "src/main.go"
             ],
             "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
             "problemMatcher": "$go"
         },
         {
@@ -82,9 +79,6 @@
                 "cwd": "${workspaceFolder}/FrontendGo"
             },
             "group": "build",
-            "presentation": {
-                "reveal": "silent"
-            },
             "problemMatcher": "$go"
         }
     ]

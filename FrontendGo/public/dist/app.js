@@ -4,24 +4,16 @@ let response = null;
 let data = null;
 let stringifiedData = null;
 
-async function loadData() {
-    response = await fetch('http://localhost:8002/api/rawdata');
-    data = await response.json();
-    stringifiedData = JSON.stringify(data);
-}
+const rawDataUrl = 'http://localhost:8002/api/rawdata';
 
 const go = new Go();
 
 async function loadWasm() {
-    const result = await WebAssembly.instantiateStreaming(fetch("dist/main.wasm"), go.importObject);
+    const result = await WebAssembly.instantiateStreaming(fetch("dist/tiny_main.wasm"), go.importObject);
     go.run(result.instance);
 }
 
 async function initialiseReport() {
-    if (!stringifiedData) {
-        await loadData();
-    }
-
     const subjects = document.getElementById('subject');
     const filters = document.getElementById('filter');
 
@@ -36,7 +28,16 @@ async function initialiseReport() {
     });
 }
 
-loadWasm().then(() => {
+loadWasm().then(async () => {
+    const report = document.getElementById('report');
+    const loading = document.getElementById('loading');
+
+    report.style.display = 'none';
+    loading.style.display = 'block';
+    await loadDataFromUrl(rawDataUrl);
+    report.style.display = 'block';
+    loading.style.display = 'none';
+
     initialiseReport();
 });
 
@@ -47,9 +48,8 @@ function renderReport(subjects, filters) {
     const selectedSubjectId = subjects.value == '' || subjects.value == "null" ? null : parseInt(subjects.value);
     const selectedFilterId = filters.value == '' || filters.value == "null" ? null : parseInt(filters.value);
 
-    const processedObject = window.processData(stringifiedData, selectedSubjectId, selectedFilterId);
+    const processedObject = window.processData(selectedSubjectId, selectedFilterId);
     const responseData = JSON.parse(processedObject);
-    console.log(responseData);
 
     subjects.innerHTML = '';
 
