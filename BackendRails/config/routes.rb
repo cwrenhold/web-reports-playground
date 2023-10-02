@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   # root "articles#index"
   get '/' => 'grade_breakdown#index'
   get 'gradebreakdown' => 'grade_breakdown#index'
+  get 'sql' => 'grade_breakdown_sql#index'
 end
