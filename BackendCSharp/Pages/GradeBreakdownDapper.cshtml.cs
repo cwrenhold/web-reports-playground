@@ -12,16 +12,11 @@ namespace BackendCSharp.Pages;
 
 public class GradeBreakdownDapperModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-    private readonly DbConnectionStringBuilder _dbConnectionString;
     private readonly string _connectionString;
 
-    public GradeBreakdownDapperModel(DbConnectionStringBuilder dbConnectionString, ILogger<IndexModel> logger)
+    public GradeBreakdownDapperModel(ConnectionDetails dbConnectionString)
     {
-        _logger = logger;
-
-        _dbConnectionString = dbConnectionString;
-        _connectionString = _dbConnectionString.ConnectionString;
+        _connectionString = dbConnectionString.ConnectionString;
     }
 
     [FromQuery]

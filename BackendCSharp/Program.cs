@@ -8,7 +8,7 @@ builder.Services.AddRazorPages()
 
 builder.Services.AddControllers();
 
-builder.Services.AddSingleton<DbConnectionStringBuilder>(service =>
+builder.Services.AddSingleton<ConnectionDetails>(services =>
 {
     var connectionStringBuilder = new DbConnectionStringBuilder
     {
@@ -19,7 +19,10 @@ builder.Services.AddSingleton<DbConnectionStringBuilder>(service =>
         { "Port", Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? string.Empty }
     };
 
-    return connectionStringBuilder;
+    return new ConnectionDetails
+    {
+        ConnectionString = connectionStringBuilder.ConnectionString
+    };
 });
 
 builder.Services.AddDbContext<BackendCSharp.Data.PlaygroundContext>();
@@ -65,3 +68,8 @@ app.MapRazorPages();
 app.MapControllers();
 
 app.Run();
+
+public class ConnectionDetails
+{
+    public string ConnectionString { get; init; } = string.Empty;
+}
