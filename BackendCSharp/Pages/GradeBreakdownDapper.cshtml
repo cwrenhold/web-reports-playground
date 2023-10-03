@@ -3,68 +3,80 @@
 @using BackendCSharp.Data
 @{
     ViewData["Title"] = "Grade Breakdown";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
 
-<form method="get" id="optionsForm">
-    <label for="subject">Subject:</label>
-    <select id="subject" class="form-control" asp-for="SelectedSubjectId" onchange="document.getElementById('optionsForm').submit()">
-        <option value="">All</option>
-        @foreach (var subject in this.Model.Subjects)
-        {
-            <option value="@subject.Id">@subject.Name</option>
-        }
-    </select>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BackendCSharp</title>
+</head>
 
-    <label for="filter">Breakdown:</label>
-    <select id="filter" class="form-control" asp-for="SelectedFilterId" onchange="document.getElementById('optionsForm').submit()">
-        <option value="">None</option>
-        @foreach (var filter in this.Model.Filters)
-        {
-            <option value="@filter.Id">@filter.Name</option>
-        }
-    </select>
-</form>
-
-<div>
-    @foreach (var group in Model.GroupReportData)
-    {
-        <div style="height: 500px; float: left;">
-            @if (group.Key != null)
+<body>
+    <form method="get" id="optionsForm">
+        <label for="subject">Subject:</label>
+        <select id="subject" class="form-control" asp-for="SelectedSubjectId"
+            onchange="document.getElementById('optionsForm').submit()">
+            <option value="">All</option>
+            @foreach (var subject in this.Model.Subjects)
             {
-                <h3>@group.Key</h3>
+                <option value="@subject.Id">@subject.Name</option>
             }
+        </select>
 
-            <div style="height: 450px">
-                <canvas id="chart-@group.Key"></canvas>
+        <label for="filter">Breakdown:</label>
+        <select id="filter" class="form-control" asp-for="SelectedFilterId"
+            onchange="document.getElementById('optionsForm').submit()">
+            <option value="">None</option>
+            @foreach (var filter in this.Model.Filters)
+            {
+                <option value="@filter.Id">@filter.Name</option>
+            }
+        </select>
+    </form>
+
+    <div>
+        @foreach (var group in Model.GroupReportData)
+        {
+            <div style="height: 500px; float: left;">
+                @if (group.Key != null)
+                {
+                    <h3>@group.Key</h3>
+                }
+
+                <div style="height: 450px">
+                    <canvas id="chart-@group.Key"></canvas>
+                </div>
             </div>
-        </div>
-    }
-    <div style="clear: both;"></div>
-</div>
+        }
+        <div style="clear: both;"></div>
+    </div>
 
-@section Scripts
-{
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         @foreach (var group in Model.GroupReportData)
         {
             <text>
-            var ctx = document.getElementById('chart-@group.Key');
+                var ctx = document.getElementById('chart-@group.Key');
 
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: [@Html.Raw(group.Select(x => $"\"{x.Label}\"").Aggregate((x, y) => x + ", " + y))],
-                    datasets: [{
-                        label: '# of Grades',
-                        data: [@group.Select(x => x.Count.ToString()).Aggregate((x, y) => x + ", " + y)],
-                        borderWidth: 1
-                    }]
-                },
-            });
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [@Html.Raw(group.Select(x => $"\"{x.Label}\"").Aggregate((x, y) => x + ", " + y))],
+                        datasets: [{
+                            label: '# of Grades',
+                            data: [@group.Select(x => x.Count.ToString()).Aggregate((x, y) => x + ", " + y)],
+                            borderWidth: 1
+                        }]
+                    },
+                });
             </text>
         }
-</script>
+    </script>
 
-}
+</body>
+
+</html>

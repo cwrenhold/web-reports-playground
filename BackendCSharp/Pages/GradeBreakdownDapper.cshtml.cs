@@ -6,21 +6,22 @@ using Microsoft.EntityFrameworkCore;
 using Dapper;
 using System.Data;
 using Npgsql;
+using System.Data.Common;
 
 namespace BackendCSharp.Pages;
 
 public class GradeBreakdownDapperModel : PageModel
 {
-    private readonly PlaygroundContext _playgroundContext;
     private readonly ILogger<IndexModel> _logger;
+    private readonly DbConnectionStringBuilder _dbConnectionString;
     private readonly string _connectionString;
 
-    public GradeBreakdownDapperModel(PlaygroundContext playgroundContext, ILogger<IndexModel> logger)
+    public GradeBreakdownDapperModel(DbConnectionStringBuilder dbConnectionString, ILogger<IndexModel> logger)
     {
-        _playgroundContext = playgroundContext;
         _logger = logger;
 
-        this._connectionString = this._playgroundContext.Database.GetConnectionString() ?? string.Empty;
+        _dbConnectionString = dbConnectionString;
+        _connectionString = _dbConnectionString.ConnectionString;
     }
 
     [FromQuery]

@@ -1,3 +1,5 @@
+using System.Data.Common;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +7,20 @@ builder.Services.AddRazorPages()
     .AddRazorRuntimeCompilation();
 
 builder.Services.AddControllers();
+
+builder.Services.AddSingleton<DbConnectionStringBuilder>(service =>
+{
+    var connectionStringBuilder = new DbConnectionStringBuilder
+    {
+        { "Host", Environment.GetEnvironmentVariable("POSTGRES_SERVER") ?? string.Empty },
+        { "Database", Environment.GetEnvironmentVariable("PROJECT_DB") ?? string.Empty },
+        { "Username", Environment.GetEnvironmentVariable("POSTGRES_USER") ?? string.Empty },
+        { "Password", Environment.GetEnvironmentVariable("POSTGRES_PASSWORD") ?? string.Empty },
+        { "Port", Environment.GetEnvironmentVariable("POSTGRES_PORT") ?? string.Empty }
+    };
+
+    return connectionStringBuilder;
+});
 
 builder.Services.AddDbContext<BackendCSharp.Data.PlaygroundContext>();
 
